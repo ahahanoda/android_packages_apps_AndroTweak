@@ -13,22 +13,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. まず Android SDK のセットアップ用に JDK 17 を用意する
       - name: Set up JDK 17 for SDK Manager
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install required Android SDK components
         run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-19" "build-tools;28.0.3"
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | $SDKMANAGER --licenses
+          $SDKMANAGER "platforms;android-19" "build-tools;28.0.3"
 
-      # 2. 実際のアプリビルド（Gradle）用に JDK 8 へ切り替える
       - name: Switch to JDK 8 for Building Legacy App
         uses: actions/setup-java@v4
         with:
